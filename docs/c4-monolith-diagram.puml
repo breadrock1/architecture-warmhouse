@@ -1,0 +1,16 @@
+@startuml as-is-context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title "As-Is C4 diagram of Smart Home system"
+
+Person(user, "User", "Registered user of Smart Home system")
+Person(admin, "Admin", "Smart Home system engeneer to setup rele")
+
+System_Ext(sensor, "Heating system", "IoT sensor system (check appartment temperature)")
+System(system, "Samrt Home", "Management and monitoring of heating system")
+
+Rel(user, system, "Load temperature sensor actual value and switch heating system", "HTTP")
+Rel(admin, system, "Load temperature sensor actual value and switch heating system", "HTTP")
+Rel(system, sensor, "Load temperature sensor actual value and manage heating system", "HTTP")
+@enduml
+
