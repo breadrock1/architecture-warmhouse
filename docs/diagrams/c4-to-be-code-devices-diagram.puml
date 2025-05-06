@@ -1,0 +1,63 @@
+@startuml code
+title "DeviceService code diagram"
+
+enum DeviceType {
+  Temperature
+  Switcher
+}
+
+enum DeviceStatus {
+  Active
+  Paused
+  Unavailable
+}
+
+enum DeviceUnit {
+  Celsius
+  Fahrenheit
+}
+
+class Device {
+    -id: string
+    -location: string
+    -user_id: string
+    -name: string
+    -description: string
+    -type: DeviceType
+    -status: DeviceStatus
+    -unit: DeviceUnit
+    -created_at: time.Duration
+    -updated_at: time.Duration
+}
+
+Device --> DeviceType : contains
+Device --> DeviceStatus : contains
+Device --> DeviceUnit : contains
+
+interface IDeviceRepository {
+  +get_device(device_id: string) (Device, error)
+  +create_device(device: Device) error
+  +update_device(device: Device) error
+  +delete_device(device_id: string) error
+}
+
+class PgDeviceRepository {
+  +get_device(device_id: string) (Device, error)
+  +create_device(device: Device) error
+  +update_device(device: Device) error
+  +delete_device(device_id: string) error
+}
+
+class DeviceService {
+  -repository: IDeviceRepository
+  +add_device(device: Device) error
+  +remove_device(device_id: string) error
+  +turn_on_device(device_id: string) bool
+  +turn_off_device(device_id: string) bool
+  +set_value(device_id: string, temperature: float) bool
+}
+
+DeviceService --> IDeviceRepository : uses repository instance
+IDeviceRepository --> PgDeviceRepository : repository implementation (Posgtres client)
+
+@enduml

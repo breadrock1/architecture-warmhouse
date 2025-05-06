@@ -13,4 +13,3 @@ Rel(user, system, "Load temperature sensor actual value and switch heating syste
 Rel(admin, system, "Load temperature sensor actual value and switch heating system", "HTTP")
 Rel(system, sensor, "Load temperature sensor actual value and manage heating system", "HTTP")
 @enduml
-

@@ -1,0 +1,24 @@
+@startuml monitoring_api_components
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title "Monitoring system components C4 diagram"
+
+Container_Boundary(api, "monitoring_system_api (go)") {
+
+  Component(controller, "MonitoringController", "Echo", "Store telemetry; Requests controller")
+  Component(service, "MonitoringService", "Go", "Processing telemetry data for analysing and displaying")
+  Component(repo, "MonitoringRepository", "Go + pgxpool", "Store telemetry data")
+
+  Rel(controller, service, "Send telemetry")
+  Rel(service, repo, "Read/Write telemetry")
+}
+
+Container_Ext(device, "Smart Home IoT device", "Send telemetry")
+Rel(device, controller, "HTTP", "Store data")
+
+ContainerDb(monitoring_db, "Database", "PostgreSQL", "Store telemetry data")
+Rel(repo, monitoring_db, "SQL", "Read/Write data")
+
+Person(user, "User")
+Rel(user, controller, "HTTP", "Load telemetry data")
+@enduml

@@ -1,0 +1,45 @@
+@startuml containers
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title "Containers C4 diagram (TO-BE) Smart Home system"
+
+Person(user, "Users", "User of the system with the connected heating system")
+Person(admin, "Support/Admin", "Train and tutoring users and provides support")
+
+System_Boundary(system, "Smart Home system") {
+    Container_Boundary(users, "Users") {
+        Container(users_api, "API", "Go", "Manages user accounts")
+        ContainerDb(users_db, "Database", "PostgreSQL", "Store users data")
+        Rel(users_api, users_db, "Read/Write", "SQL")
+    }
+
+    Container_Boundary(devices_control, "Manage IoT devices") {
+        Container(devices_control_api, "API", "Go", "Manage IoT devices")
+        ContainerDb(devices_db, "Database", "PostgreSQL", "Store settings of IoT devices")
+        Rel(devices_control_api, devices_db, "Read/Write", "SQL")
+    }
+
+    Container_Boundary(monitoring, "IoT devices monitoring") {
+        Container(monitoring_api, "API", "Go", "Manage IoT devices telemetry")
+        ContainerDb(monitoring_db, "Database", "PostgreSQL", "Store telemetry data")
+        Rel(monitoring_api, monitoring_db, "Read/Write", "SQL")
+    }
+
+    Container(reverse_proxy, "Reverse Proxy", "Nginx", "Proxy requests to internal system API")
+    Rel(reverse_proxy, users_api, "Get data", "HTTP")
+    Rel(reverse_proxy, devices_control_api, "Get data", "HTTP")
+    Rel(reverse_proxy, monitoring_api, "Get data", "HTTP")
+
+
+    Container(web_app, "Web-UI", "React", "Web user interface")
+    Rel(web_app, reverse_proxy, "Get data", "REST API")
+    Rel(user, web_app, "Interaction with system", "REST API")
+    Rel(admin, web_app, "Interaction with system", "REST API")
+}
+
+
+Container_Ext(device, "Smart Home IoT", $descr="Manage device")
+Rel(devices_control_api, device, "Manage device", "REST API")
+Rel(device, monitoring_api, "Send telemetry data", "REST API")
+@enduml

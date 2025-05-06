@@ -1,0 +1,657 @@
+openapi: 3.0.3
+info:
+  title: Smart Home API
+  version: 1.0.0
+  description: Smart Home system API to manage users, locations, devices.
+security:
+  - BearerAuth: []
+paths:
+  /devices/types:
+    post:
+      tags:
+        - DevicesTypes
+      summary: Create new device type.
+      description: Create new device type.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDeviceTypeForm'
+            example:
+              name: "Temperature sensor"
+              description: "Temperature sensor device"
+      responses:
+        '201':
+          description: Done
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceType'
+        '400':
+          description: Incorrect request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - DevicesTypes
+      summary: Load all device types.
+      description: Load all device types.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Done
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    description: Pagination number page
+                    example: 1
+                  limit:
+                    type: integer
+                    description: Pagination page size
+                    example: 10
+                  total:
+                    type: integer
+                    description: Common device types amount
+                    example: 100
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeviceType'
+                example:
+                  page: 1
+                  limit: 10
+                  total: 100
+                  items:
+                    - id: "1e0bfd5b-1dfd-4fda-a77a-f6aa669593ce"
+                      name: "Temperature sensor"
+                      description: "Temperature sensor device"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /devices/types/{id}:
+    delete:
+      tags:
+        - DevicesTypes
+      summary: Delete device type.
+      description: Delete device type by id.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Device type id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Done
+        '400':
+          description: Incorrect request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /devices:
+    post:
+      tags:
+        - Devices
+      summary: Create new device.
+      description: Create new device into location.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDeviceForm'
+            example:
+              id: "1e0bfd5b-1dfd-4fda-a77a-f6aa669593ce"
+              location_id: "3b027c28-b1bf-4a75-9e58-f3588608b3d5"
+              type_id: "TEMPERATURE"
+              unit: "°C"
+              name: "Temperature sensor"
+              description: "Temperature sensor device"
+      responses:
+        '201':
+          description: Done
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          description: Incorrect request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Devices
+      summary: Load all devices.
+      description: Load all devices.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Done
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    description: Pagination number page
+                    example: 1
+                  limit:
+                    type: integer
+                    description: Pagination page size
+                    example: 10
+                  total:
+                    type: integer
+                    description: Common devices amount
+                    example: 100
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Device'
+                example:
+                  page: 1
+                  limit: 10
+                  total: 100
+                  items:
+                    - id: "1e0bfd5b-1dfd-4fda-a77a-f6aa669593ce"
+                      user_id: "6ef7a48b-b9ed-4a30-8916-fc292d67510a"
+                      location_id: "3b027c28-b1bf-4a75-9e58-f3588608b3d5"
+                      type_id: "TEMPERATURE"
+                      name: "Temperature sensor"
+                      description: "Temperature sensor device"
+                      unit: "°C"
+                      created_at: "2023-10-01T12:00:00Z"
+                      updated_at: "2023-10-01T12:00:00Z"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /devices/{id}:
+    delete:
+      tags:
+        - Devices
+      summary: Delete device.
+      description: Delete device by device id.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Device id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Done
+        '400':
+          description: Incorrect request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Devices
+      summary: Load device information.
+      description: Load device information by device id.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Device id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Done
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          description: Incorrect request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - Devices
+      summary: Update device information.
+      description: Update device information by device id.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Device id
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDeviceForm'
+            example:
+              location_id: "3b027c28-b1bf-4a75-9e58-f3588608b3d5"
+              type_id: "TEMPERATURE"
+              unit: "°C"
+              name: "Temperature sensor"
+              description: "Temperature sensor device"
+      responses:
+        '200':
+          description: Done
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          description: Incorrect request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /locations:
+    post:
+      tags:
+        - Locations
+      summary: Create new location.
+      description: Create new location with house or apartments.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLocationForm'
+            example:
+              name: "Bathroom"
+              description: "Smart bathroom"
+      responses:
+        '201':
+          description: Done
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+        '400':
+          description: Incorrect request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Locations
+      summary: Load all locations.
+      description: Load all locations.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Список локаций успешно получен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    description: Pagination number page
+                    example: 1
+                  limit:
+                    type: integer
+                    description: Pagination page size
+                    example: 10
+                  total:
+                    type: integer
+                    description: Common locations amount
+                    example: 100
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Location'
+                example:
+                  page: 1
+                  limit: 10
+                  total: 100
+                  items:
+                    - id: "9c3aac35-19f7-4e2f-86d7-766bba6b58e1"
+                      user_id: "6ef7a48b-b9ed-4a30-8916-fc292d67510a"
+                      name: "Bathroom"
+                      description: "Smart light into bathroom"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /locations/{id}:
+    delete:
+      tags:
+        - Locations
+      summary: Delete location.
+      description: Delete location by id.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Location id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Done
+        '400':
+          description: Incorrect request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /locations/{id}/devices:
+    get:
+      tags:
+        - Locations
+      summary: Load all devices on location.
+      description: Load all devices on location by location id.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Location id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Done
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    description: Pagination number page
+                    example: 1
+                  limit:
+                    type: integer
+                    description: Pagination page size
+                    example: 10
+                  total:
+                    type: integer
+                    description: Common devices on location amount
+                    example: 50
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Device'
+                example:
+                  page: 1
+                  limit: 10
+                  total: 50
+                  items:
+                    - id: "1e0bfd5b-1dfd-4fda-a77a-f6aa669593ce"
+                      user_id: "6ef7a48b-b9ed-4a30-8916-fc292d67510a"
+                      location_id: "3b027c28-b1bf-4a75-9e58-f3588608b3d5"
+                      type_id: "TEMPERATURE"
+                      name: "Temperature sensor"
+                      description: "Temperature sensor device"
+        '400':
+          description: Incorrect request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Location:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        address:
+          type: string
+        description:
+          type: string
+    CreateLocationForm:
+      type: object
+      required:
+        - name
+        - address
+        - description
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        description:
+          type: string
+    Device:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        location_id:
+          type: string
+          format: uuid
+        type_id:
+          type: string
+        unit:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    CreateDeviceForm:
+      type: object
+      properties:
+        location_id:
+          type: string
+          format: uuid
+        type_id:
+          type: string
+        unit:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    DeviceType:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+    CreateDeviceTypeForm:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string

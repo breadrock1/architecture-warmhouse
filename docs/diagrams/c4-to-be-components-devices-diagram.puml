@@ -1,0 +1,25 @@
+@startuml components
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title "IoT devices manager C4 component diagram"
+
+Container_Boundary(api, "iot_devices_api (Go)") {
+
+  Component(controller, "DeviceController", "Echo", "Requests controller")
+  Component(service, "DeviceService", "Go", "Manage of IoT devices (switching, settings)")
+  Component(repo, "DeviceRepository", "Go + pgxpool", "Interaction with DB")
+
+  Rel(controller, service, "Invoke")
+  Rel(service, repo, "Read/Write IoT devices data")
+}
+
+Person(user, "User")
+Rel(user, controller, "HTTP", "Manage IoT devices by API")
+
+ContainerDb(devices_db, "Database", "PostgreSQL", "Store IoT devices data")
+Rel(repo, devices_db, "SQL", "Read/Write data")
+
+Container_Ext(device, "Smart Home IoT devices", "Managment of devices")
+Rel(service, device, "Send manage commands", "HTTP/REST")
+
+@enduml

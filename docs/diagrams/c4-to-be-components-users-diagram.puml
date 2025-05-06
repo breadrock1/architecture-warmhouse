@@ -1,0 +1,27 @@
+@startuml users_api_components
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title "Users manage system C4 components diagram"
+
+Container_Boundary(api, "users_system_api (Go)") {
+
+  Component(controller, "Controller", "Echo", "Requests controller")
+  Component(user_service, "UserService", "Go", "Managing users profile")
+  Component(auth_service, "AuthService", "Go", "Registration and authorization users (JWT)")
+  Component(user_repo, "UserRepository", "Go + pgxpool", "Storing users data")
+  Component(auth_repo, "AuthRepository", "Go + pgxpool", "Store credentials data to provices access to system")
+
+  Rel(controller, user_service, "Invoke")
+  Rel(controller, auth_service, "Invoke")
+  Rel(user_service, user_repo, "Read/Write users")
+  Rel(auth_service, auth_repo, "Registration and Authorization")
+}
+
+Person(user, "User")
+Rel(user, controller, "HTTP", "Users account")
+
+ContainerDb(users_db, "Database", "PostgreSQL", "Store users data")
+Rel(user_repo, users_db, "SQL", "Read/Write data")
+Rel(auth_repo, users_db, "SQL", "Read/Write data")
+
+@enduml
