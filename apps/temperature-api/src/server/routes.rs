@@ -14,6 +14,7 @@ pub(crate) struct TemperatureResponse {
     #[schema(example = "2")]
     sensor_id: String,
     #[schema(example = 24.1)]
+    #[serde(rename(serialize = "value"))]
     temperature: f64,
 }
 
