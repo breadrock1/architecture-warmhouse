@@ -25,7 +25,6 @@ services:
     build:
       context: ./temperature-api
       dockerfile: Dockerfile
-    container_name: sensor-api
     restart: unless-stopped
     ports:
       - "8081:8081"
